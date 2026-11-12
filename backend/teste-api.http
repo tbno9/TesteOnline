@@ -1,0 +1,93 @@
+### Lista testelor
+GET http://localhost:8080/api/teste
+
+### Cautare dupa titlu
+GET http://localhost:8080/api/teste?cautare=java
+
+### Creare test (autorId 1 = Profesor Test din V2) -> 201
+POST http://localhost:8080/api/teste
+Content-Type: application/json
+
+{
+  "titlu": "Java de baza",
+  "descriere": "Intrebari introductive",
+  "domeniu": "Programare",
+  "durataMinute": 20,
+  "autorId": 1
+}
+
+### Detaliu test -> 200
+GET http://localhost:8080/api/teste/1
+
+### Modificare test -> 200
+PUT http://localhost:8080/api/teste/1
+Content-Type: application/json
+
+{
+  "titlu": "Java de baza (v2)",
+  "descriere": "Intrebari introductive",
+  "domeniu": "Programare",
+  "durataMinute": 25,
+  "autorId": 1
+}
+
+### Adaugare intrebare -> 201
+POST http://localhost:8080/api/teste/1/intrebari
+Content-Type: application/json
+
+{
+  "text": "Ce cuvant cheie creeaza un obiect?",
+  "punctaj": 2,
+  "variante": [
+    { "text": "new", "corecta": true },
+    { "text": "create", "corecta": false }
+  ]
+}
+
+### Modificare intrebare -> 200 (variantele se inlocuiesc complet)
+PUT http://localhost:8080/api/intrebari/1
+Content-Type: application/json
+
+{
+  "text": "Ce operator creeaza un obiect in Java?",
+  "punctaj": 3,
+  "variante": [
+    { "text": "new", "corecta": true },
+    { "text": "malloc", "corecta": false },
+    { "text": "make", "corecta": false }
+  ]
+}
+
+### EROARE 400: nicio varianta corecta
+POST http://localhost:8080/api/teste/1/intrebari
+Content-Type: application/json
+
+{
+  "text": "Intrebare gresita",
+  "punctaj": 1,
+  "variante": [
+    { "text": "a", "corecta": false },
+    { "text": "b", "corecta": false }
+  ]
+}
+
+### EROARE 400: autorul e student (id 2)
+POST http://localhost:8080/api/teste
+Content-Type: application/json
+
+{ "titlu": "X", "domeniu": "Y", "durataMinute": 10, "autorId": 2 }
+
+### EROARE 400: validare @Valid (titlu gol, durata 0)
+POST http://localhost:8080/api/teste
+Content-Type: application/json
+
+{ "titlu": "", "domeniu": "Y", "durataMinute": 0, "autorId": 1 }
+
+### EROARE 404: test inexistent
+GET http://localhost:8080/api/teste/999
+
+### Stergere intrebare -> 204
+DELETE http://localhost:8080/api/intrebari/1
+
+### Stergere test -> 204
+DELETE http://localhost:8080/api/teste/1
