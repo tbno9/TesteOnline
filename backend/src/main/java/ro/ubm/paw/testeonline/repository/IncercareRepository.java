@@ -15,4 +15,7 @@ public interface IncercareRepository extends JpaRepository<Incercare, Long> {
     // rezultatele la un test, pentru profesor
     @EntityGraph(attributePaths = "student")
     List<Incercare> findByTestIdOrderByInceputaLaDesc(Long testId);
+
+    // exista vreo incercare la acest test? (blocheaza modificarea/stergerea)
+    boolean existsByTestId(Long testId);
 }
