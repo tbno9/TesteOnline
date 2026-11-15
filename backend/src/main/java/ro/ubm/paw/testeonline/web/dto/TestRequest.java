@@ -20,9 +20,5 @@ public record TestRequest(
 
         @NotNull(message = "Durata este obligatorie")
         @Min(value = 1, message = "Durata trebuie să fie de cel puțin 1 minut")
-        Integer durataMinute,
-
-        // shortcut: temporar, pana la securitate; atunci autorul va fi utilizatorul logat
-        @NotNull(message = "Autorul este obligatoriu")
-        Long autorId
+        Integer durataMinute
 ) { }

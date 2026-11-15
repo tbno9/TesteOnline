@@ -45,9 +45,9 @@ public class TestService {
         return TestDetaliuDto.from(test, intrebareRepo.findByTestIdOrderByOrdineAsc(id));
     }
 
-    public TestDetaliuDto creeaza(TestRequest req) {
-        Utilizator autor = utilizatorRepo.findById(req.autorId())
-                .orElseThrow(() -> new CerereInvalidaException("Autorul " + req.autorId() + " nu există"));
+    public TestDetaliuDto creeaza(TestRequest req, String emailAutor) {
+        Utilizator autor = utilizatorRepo.findByEmailIgnoreCase(emailAutor)
+                .orElseThrow(() -> new CerereInvalidaException("Utilizatorul " + emailAutor + " nu există"));
         if (autor.getRol() != Rol.PROFESOR) {
             throw new CerereInvalidaException("Doar un profesor poate crea teste");
         }

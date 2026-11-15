@@ -2,6 +2,8 @@ package ro.ubm.paw.testeonline.web;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ro.ubm.paw.testeonline.service.TestService;
 import ro.ubm.paw.testeonline.web.dto.*;
@@ -33,8 +35,9 @@ public class TestApiController {
 
     @PostMapping("/teste")
     @ResponseStatus(HttpStatus.CREATED)
-    public TestDetaliuDto creeaza(@Valid @RequestBody TestRequest req) {
-        return service.creeaza(req);
+    public TestDetaliuDto creeaza(@Valid @RequestBody TestRequest req,
+                                  @AuthenticationPrincipal Jwt jwt) {
+        return service.creeaza(req, jwt.getSubject()); // subject = emailul utilizatorului logat
     }
 
     @PutMapping("/teste/{id}")
