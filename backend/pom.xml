@@ -76,6 +76,24 @@
             <scope>runtime</scope>
         </dependency>
 
+<!--    spring security: lantul de filtre care verifica fiecare cerere inainte de controller-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+<!--    resource server: citeste si verifica token-urile JWT din header-ul Authorization-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+
+<!--    pentru teste: jwt(), @WithMockUser-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
