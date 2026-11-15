@@ -1,38 +1,63 @@
+### LOGIN profesor -> 200, tokenul se salveaza automat in {{token}}
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{ "email": "profesor@teste.ro", "parola": "admin1234" }
+
+> {% client.global.set("token", response.body.accessToken); %}
+
+### Cine sunt eu -> 200 (email + roluri din token)
+GET http://localhost:8080/api/auth/eu
+Authorization: Bearer {{token}}
+
+### EROARE 401: parola gresita
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{ "email": "profesor@teste.ro", "parola": "gresita" }
+
+### EROARE 401: fara token
+GET http://localhost:8080/api/teste
+
 ### Lista testelor
 GET http://localhost:8080/api/teste
+Authorization: Bearer {{token}}
 
 ### Cautare dupa titlu
 GET http://localhost:8080/api/teste?cautare=java
+Authorization: Bearer {{token}}
 
-### Creare test (autorId 1 = Profesor Test din V2) -> 201
+### Creare test -> 201 (autorul = utilizatorul din token)
 POST http://localhost:8080/api/teste
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "titlu": "Java de baza",
   "descriere": "Intrebari introductive",
   "domeniu": "Programare",
-  "durataMinute": 20,
-  "autorId": 1
+  "durataMinute": 20
 }
 
 ### Detaliu test -> 200
 GET http://localhost:8080/api/teste/1
+Authorization: Bearer {{token}}
 
 ### Modificare test -> 200
 PUT http://localhost:8080/api/teste/1
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "titlu": "Java de baza (v2)",
   "descriere": "Intrebari introductive",
   "domeniu": "Programare",
-  "durataMinute": 25,
-  "autorId": 1
+  "durataMinute": 25
 }
 
 ### Adaugare intrebare -> 201
 POST http://localhost:8080/api/teste/1/intrebari
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -46,6 +71,7 @@ Content-Type: application/json
 
 ### Modificare intrebare -> 200 (variantele se inlocuiesc complet)
 PUT http://localhost:8080/api/intrebari/1
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -60,6 +86,7 @@ Content-Type: application/json
 
 ### EROARE 400: nicio varianta corecta
 POST http://localhost:8080/api/teste/1/intrebari
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -71,23 +98,46 @@ Content-Type: application/json
   ]
 }
 
-### EROARE 400: autorul e student (id 2)
-POST http://localhost:8080/api/teste
-Content-Type: application/json
-
-{ "titlu": "X", "domeniu": "Y", "durataMinute": 10, "autorId": 2 }
-
 ### EROARE 400: validare @Valid (titlu gol, durata 0)
 POST http://localhost:8080/api/teste
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
-{ "titlu": "", "domeniu": "Y", "durataMinute": 0, "autorId": 1 }
+{ "titlu": "", "domeniu": "Y", "durataMinute": 0 }
 
 ### EROARE 404: test inexistent
 GET http://localhost:8080/api/teste/999
+Authorization: Bearer {{token}}
 
 ### Stergere intrebare -> 204
 DELETE http://localhost:8080/api/intrebari/1
+Authorization: Bearer {{token}}
 
 ### Stergere test -> 204
 DELETE http://localhost:8080/api/teste/1
+Authorization: Bearer {{token}}
+
+### ---------- STUDENT ----------
+
+### LOGIN student -> 200, tokenul se salveaza in {{tokenStudent}}
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{ "email": "student@teste.ro", "parola": "client1234" }
+
+> {% client.global.set("tokenStudent", response.body.accessToken); %}
+
+### Student: lista testelor -> 200
+GET http://localhost:8080/api/teste
+Authorization: Bearer {{tokenStudent}}
+
+### EROARE 403: studentul nu vede detaliul (contine raspunsurile corecte)
+GET http://localhost:8080/api/teste/1
+Authorization: Bearer {{tokenStudent}}
+
+### EROARE 403: studentul nu poate crea teste
+POST http://localhost:8080/api/teste
+Authorization: Bearer {{tokenStudent}}
+Content-Type: application/json
+
+{ "titlu": "X", "domeniu": "Y", "durataMinute": 10 }
