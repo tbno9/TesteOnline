@@ -2,6 +2,7 @@ package ro.ubm.paw.testeonline.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -29,6 +30,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     public ProblemDetail conflict(ConflictException ex) {
         return problema(HttpStatus.CONFLICT, "Conflict", ex.getMessage());
+    }
+
+    // la login: acelasi mesaj pentru email inexistent si parola gresita (nu dezvaluim ce conturi exista)
+    @ExceptionHandler(AuthenticationException.class)
+    public ProblemDetail autentificareEsuata(AuthenticationException ex) {
+        return problema(HttpStatus.UNAUTHORIZED, "Autentificare eșuată", "Email sau parolă greșită");
     }
 
     private static ProblemDetail problema(HttpStatus status, String titlu, String detaliu) {
