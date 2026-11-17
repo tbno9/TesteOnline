@@ -32,6 +32,8 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/error").permitAll()
+                // documentatia API e publica; endpoint-urile raman protejate de regulile de mai jos
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers("/api/auth/eu").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/teste").hasAnyRole("PROFESOR", "STUDENT")

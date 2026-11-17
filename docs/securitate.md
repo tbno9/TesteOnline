@@ -17,6 +17,7 @@ Parolele sunt salvate in baza de date criptate (BCrypt), nu in clar.
 
 | Resursa | Anonim | STUDENT | PROFESOR |
 |---|---|---|---|
+| Swagger UI (`/swagger-ui.html`) si documentatia (`/v3/api-docs`) | permis | permis | permis |
 | `POST /api/auth/login` (login) | permis | permis | permis |
 | `GET /api/auth/eu` (cine sunt eu) | interzis | permis | permis |
 | `GET /api/teste` (lista testelor) | interzis | permis | permis |
